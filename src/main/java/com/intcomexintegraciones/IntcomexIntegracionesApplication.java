@@ -16,9 +16,4 @@ public class IntcomexIntegracionesApplication {
         SpringApplication.run(IntcomexIntegracionesApplication.class, args);
     }
 
-    @Bean
-    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer(
-            @Value("${PORT:8080}") String port) {
-        return factory -> factory.setPort(Integer.parseInt(port));
-    }
 }

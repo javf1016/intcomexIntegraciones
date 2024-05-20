@@ -1,28 +1,20 @@
-# Usa una imagen base de Maven para compilar tu aplicación
-FROM maven:3.8.4-openjdk-17 AS build
+# syntax=docker/dockerfile:1
 
-# Establece el directorio de trabajo en el contenedor
-WORKDIR /app
+ FROM eclipse-temurin:17-jdk-jammy
 
-# Copia el archivo pom.xml y descarga las dependencias
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+ WORKDIR /app
+ COPY .mvn/ .mvn
+ COPY mvnw pom.xml ./
 
-# Copia el código fuente de tu aplicación y compílala
-COPY src ./src
-RUN mvn package -DskipTests
+ RUN chmod +x ./mvnw
 
-# Usa una imagen base más ligera para la ejecución
-FROM openjdk:17-jdk-slim
 
-# Establece el directorio de trabajo en el contenedor
-WORKDIR /app
+ # Converting the mvnw line endings during build (if you don’t change line endings of the mvnw file)
+ RUN apt-get update && apt-get install -y dos2unix
+ RUN dos2unix ./mvnw
 
-# Copia el archivo JAR compilado desde la imagen de compilación
-COPY --from=build /app/target/intcomexIntegraciones-0.0.1-SNAPSHOT.jar /app/intcomexIntegraciones-0.0.1-SNAPSHOT.jar
+ RUN ./mvnw dependency:resolve
 
-# Expone el puerto que tu aplicación usará
-EXPOSE 8080
+ COPY src ./src
 
-# Define el comando de arranque
-ENTRYPOINT ["java", "-jar", "intcomexIntegraciones-0.0.1-SNAPSHOT.jar"]
+ CMD ["./mvnw", "spring-boot:run"]
