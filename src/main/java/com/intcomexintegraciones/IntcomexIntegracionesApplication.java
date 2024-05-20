@@ -9,11 +9,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableAsync
 public class IntcomexIntegracionesApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(IntcomexIntegracionesApplication.class, args);
     }
 
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer(
+            @Value("${PORT:8080}") String port) {
+        return factory -> factory.setPort(Integer.parseInt(port));
+    }
 }
