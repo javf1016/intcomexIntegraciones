@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build /app/target/intcomexIntegraciones-0.0.1-SNAPSHOT.jar /app/intcomexIntegraciones-0.0.1-SNAPSHOT.jar
 
 # Expone el puerto que tu aplicación usará
-EXPOSE 8080
+EXPOSE 8000
 
 # Define el comando de arranque
 ENTRYPOINT ["java", "-jar", "intcomexIntegraciones-0.0.1-SNAPSHOT.jar"]
