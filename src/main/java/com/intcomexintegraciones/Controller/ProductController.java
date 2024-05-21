@@ -61,7 +61,7 @@ public class ProductController {
         try {
             productService.generateProductsAsync(100000).get(); // Esperar a que se completen las tareas asíncronas
             return new ResponseEntity<>("Se han generado 100,000 productos aleatorios.", HttpStatus.CREATED);
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (InterruptedException | ExecutionException | IllegalStateException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar los productos: " + ex.getMessage());
         }
     }

@@ -14,11 +14,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.CircuitBreaker;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 import java.util.List;
 import java.util.Random;
@@ -38,8 +38,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    @CircuitBreaker(openTimeout = 5000, resetTimeout = 10000)
+    @Retry(name = "retryService", fallbackMethod = "createProductFallback")
+    @CircuitBreaker(name = "productService", fallbackMethod = "createProductFallback")
     public Product createProduct(Product product) {
         // Verificar si la categoría asociada al producto existe
         Category existingCategory = categoryRepository.findById(product.getCategory().getCategoryId())
@@ -59,6 +59,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Async
+    @Retry(name = "retryService", fallbackMethod = "createProductFallback")
+    @CircuitBreaker(name = "productService", fallbackMethod = "createProductFallback")
     public CompletableFuture<Void> generateProductsAsync(int count) {
         List<Category> categories = categoryRepository.findAll();
         if (categories.size() < 2) {
@@ -68,21 +70,31 @@ public class ProductServiceImpl implements ProductService {
         Random random = new Random();
         logger.info("Iniciando la creación de productos...");
         for (int i = 0; i < count; i++) {
-            Product product = new Product();
-            product.setProductName("Producto " + (i + 1));
-            product.setSupplierId((long) (random.nextInt(10) + 1));
-            product.setCategory(categories.get(random.nextInt(categories.size())));
-            product.setQuantityPerUnit((random.nextInt(10) + 1) + " unidades");
-            product.setUnitPrice(random.nextDouble() * 100);
-            product.setUnitsInStock(random.nextInt(500));
-            product.setUnitsOnOrder(random.nextInt(200));
-            product.setReorderLevel(random.nextInt(50));
-            product.setDiscontinued(random.nextBoolean());
+            try {
+                Product product = new Product();
+                product.setProductName("Producto " + (i + 1));
+                product.setSupplierId((long) (random.nextInt(10) + 1));
+                product.setCategory(categories.get(random.nextInt(categories.size())));
+                product.setQuantityPerUnit((random.nextInt(10) + 1) + " unidades");
+                product.setUnitPrice(random.nextDouble() * 100);
+                product.setUnitsInStock(random.nextInt(500));
+                product.setUnitsOnOrder(random.nextInt(200));
+                product.setReorderLevel(random.nextInt(50));
+                product.setDiscontinued(random.nextBoolean());
 
-            productRepository.save(product);
-            logger.info("Producto {} creado.", i + 1);
+                productRepository.save(product);
+                logger.info("Producto {} creado.", i + 1);
+            } catch (Exception e) {
+                logger.error("Error al crear el producto {}: {}", i + 1, e.getMessage());
+            }
         }
         logger.info("Creación de productos finalizada.");
+        return CompletableFuture.completedFuture(null);
+    }
+
+    public CompletableFuture<Void> createProductFallback(int count, Throwable throwable) {
+        logger.error("Falló la creación de productos después de varios intentos: {}", throwable.getMessage());
+        // Retorna un CompletableFuture con un resultado alternativo si es necesario
         return CompletableFuture.completedFuture(null);
     }
 

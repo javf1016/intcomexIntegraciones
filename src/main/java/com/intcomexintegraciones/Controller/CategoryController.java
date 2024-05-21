@@ -3,7 +3,6 @@ package com.intcomexintegraciones.Controller;
 import com.intcomexintegraciones.Exception.CategoryAlreadyExistsException;
 import com.intcomexintegraciones.Model.Category;
 import com.intcomexintegraciones.Service.CategoryService;
-import com.intcomexintegraciones.Service.Impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
