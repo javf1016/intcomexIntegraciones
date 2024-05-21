@@ -23,10 +23,10 @@ https://intcomexintegraciones.uc.r.appspot.com/categories/
 
 # Salida Exitosa
 
-![Exitoso](https://github.com/javf1016/Images/blob/main/crearCategoriaExitoso.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/crearCategoriaExitoso.PNG?raw=true)
 
 # Categoria existente
-![Exitoso](https://github.com/javf1016/Images/blob/main/crearCategoriaExistente.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/crearCategoriaExistente.PNG?raw=true)
 
 Crear Producto (  POST    /Product/)
 https://intcomexintegraciones.uc.r.appspot.com/products/
@@ -49,22 +49,22 @@ https://intcomexintegraciones.uc.r.appspot.com/products/bulk genera 1000000 regi
 
 # Salida Exitosa
 
-![Exitoso](https://github.com/javf1016/Images/blob/main/crearproductoExitoso.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/crearproductoExitoso.PNG?raw=true)
 
 # Categoria existente
-![Exitoso](https://github.com/javf1016/Images/blob/main/crearProductoyaExistente.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/crearProductoyaExistente.PNG?raw=true)
 
 listar productos ( GET	/Products/)
 https://intcomexintegraciones.uc.r.appspot.com/products/
 
 # Salida Exitosa
 
-![Exitoso](https://github.com/javf1016/Images/blob/main/listarProductos.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/listarProductos.PNG?raw=true)
 
 listar productos por ID (GET    /Products/id/)
 https://intcomexintegraciones.uc.r.appspot.com/products/1
 
 # Salida Exitosa
 
-![Exitoso](https://github.com/javf1016/Images/blob/main/ListarId.PNG?raw=true)
+![Exitoso](https://github.com/javf1016/Images/blob/main/intcomex/ListarId.PNG?raw=true)
 
