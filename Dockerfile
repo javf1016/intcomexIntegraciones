@@ -23,6 +23,7 @@ COPY --from=build /app/target/intcomexIntegraciones-0.0.1-SNAPSHOT.jar /app/intc
 
 # Expone el puerto que tu aplicación usará
 ENV PORT 8080
+ENV HOST 0.0.0.0
 
 # Define el comando de arranque
 ENTRYPOINT ["java", "-jar", "intcomexIntegraciones-0.0.1-SNAPSHOT.jar"]
